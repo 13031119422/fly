@@ -1,0 +1,220 @@
+{include file="layout/headerylogin"/}
+<script type="text/javascript" src="__STATIC__/module/common/jquery/jquery-2.2.3.min.js"></script>
+<script src="__STATIC__/widget/admin/file/jquery.Huploadify.js"></script>
+<div class="layui-container fly-marginTop fly-user-main">
+    {include file="layout/user_left"/}
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            {include file="layout/user_set_banner"/}
+            <div class="layui-tab-content" style="padding: 20px 0;">
+                <div class="layui-form layui-form-pane layui-tab-item layui-show">
+                    <form method="post" id="form1">
+                        <div class="layui-form-item">
+                            <label for="L_email" class="layui-form-label">邮箱</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_email" name="email" required lay-verify="email" autocomplete="off" value="{$info.email|default=''}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_username" class="layui-form-label">昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_username" name="nickname" required lay-verify="required" autocomplete="off" value="{$info.nickname|default=''}" class="layui-input">
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="radio" name="sex" value="0" {if $info.sex==0}checked{/if} title="男">
+                                    <input type="radio" name="sex" value="1" {if $info.sex==1}checked{/if} title="女">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_city" class="layui-form-label">城市</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="L_city" name="city" autocomplete="off" value="{$info.city|default=''}" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label for="L_sign" class="layui-form-label">签名</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="随便写些什么刷下存在感" id="L_sign"  name="sign" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="hidden" name="id" value="{$info.id}"/>
+                            <button class="layui-btn"  lay-filter="sub1" lay-submit>确认修改</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <form method="post" id="form2">
+                    <div class="layui-form-item">
+                        <div class="avatar-add">
+                            {assign name="cover_id" value="$info.cover_id|default='0'" /}
+                            {:widget('file/index', ['name' => 'cover_id', 'value' => $cover_id, 'type' => 'img'])}
+                            <span class="loading"></span>
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="hidden" name="id" value="{$info.id}"/>
+                            <button class="layui-btn"  lay-filter="sub2" lay-submit>确认修改</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <form method="post" id="form3">
+                        <div class="layui-form-item">
+                            <label for="L_nowpass" class="layui-form-label">当前密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="L_nowpass" name="old_password" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_pass" class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="L_pass" name="password" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="L_repass" class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="L_repass" name="password_confirm" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="hidden" name="id" value="{$info.id}"/>
+                            <button class="layui-btn" key="set-mine" lay-filter="sub3" lay-submit>确认修改</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="layui-form layui-form-pane layui-tab-item">
+                    <ul class="app-bind">
+                        <li class="fly-msg app-havebind">
+                            <i class="iconfont icon-qq"></i>
+                            <span>已成功绑定，您可以使用QQ帐号直接登录Fly社区，当然，您也可以</span>
+                            <a href="javascript:;" class="acc-unbind" type="qq_id">解除绑定</a>
+
+                            <!-- <a href="" onclick="layer.msg('正在绑定微博QQ', {icon:16, shade: 0.1, time:0})" class="acc-bind" type="qq_id">立即绑定</a>
+                            <span>，即可使用QQ帐号登录Fly社区</span> -->
+                        </li>
+                        <li class="fly-msg">
+                            <i class="iconfont icon-weibo"></i>
+                            <!-- <span>已成功绑定，您可以使用微博直接登录Fly社区，当然，您也可以</span>
+                            <a href="javascript:;" class="acc-unbind" type="weibo_id">解除绑定</a> -->
+
+                            <a href="" class="acc-weibo" type="weibo_id"  onclick="layer.msg('正在绑定微博', {icon:16, shade: 0.1, time:0})" >立即绑定</a>
+                            <span>，即可使用微博帐号登录Fly社区</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+{include file="layout/footer"/}
+{include file="layout/js"/}
+<script type="text/javascript">
+    layui.use(['element','form','layer','jquery'], function () {
+
+        var element   = layui.element;
+        var form   = layui.form;
+        var layer   = layui.layer;
+        var $      = layui.jquery;
+
+        /*form.on('submit(sub)', function() {
+            document.getElementById("form1").submit();
+        });*/
+        //添加表单监听事件,提交注册信息,修改用户基本信息
+        form.on('submit(sub1)', function() {
+
+            $.ajax({
+                url:"{:url('baseInfoSet')}",
+                type:'post',
+                dataType:'json',
+                data:$('#form1').serialize(),
+
+                success:function(data){
+                    //alert(data.message);
+                    if (data.code == 1) {
+
+                        layer.msg(data.message);
+                        ///location.href = "login.html";
+                    }else {
+                        layer.msg(data.message);
+                    }
+                }
+            })
+            //防止页面跳转
+            return false;
+        });
+
+        //修改头像信息
+        form.on('submit(sub2)', function() {
+
+            $.ajax({
+                url:"{:url('userPhotoSet')}",
+                type:'post',
+                dataType:'json',
+                data:$('#form2').serialize(),
+
+                success:function(data){
+                    //alert(data.message);
+                    if (data.code == 1) {
+
+                        layer.msg(data.message);
+                        ///location.href = "login.html";
+                    }else {
+                        layer.msg(data.message);
+                    }
+                }
+            })
+            //防止页面跳转
+            return false;
+        });
+
+        //修改密码信息
+        form.on('submit(sub3)', function() {
+
+            $.ajax({
+                url:"{:url('resetPass')}",
+                type:'post',
+                dataType:'json',
+                data:$('#form3').serialize(),
+
+                success:function(data){
+                    //alert(data.message);
+                    if (data.code == 1) {
+
+                        layer.msg(data.message);
+                        ///location.href = "login.html";
+                    }else {
+                        layer.msg(data.message);
+                    }
+                }
+            })
+            //防止页面跳转
+            return false;
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+{include file="layout/headernlogin"/}
+
+<div class="layui-container fly-marginTop">
+    <div class="fly-panel fly-panel-user" pad20>
+        <div class="layui-tab layui-tab-brief" lay-filter="user">
+            <ul class="layui-tab-title">
+                <li class="layui-this">登入</li>
+                <li><a href="reg.html">注册</a></li>
+            </ul>
+            <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form layui-form-pane">
+                        <form id="reg" method="post">
+                            <div class="layui-form-item">
+                                <label for="username" class="layui-form-label">用户名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="username" name="username" required lay-verify="required" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label for="password" class="layui-form-label">密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="password" id="password" name="password" required lay-verify="required" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label for="verify" class="layui-form-label">验证码</label>
+                                <div class="layui-input-inline">
+                                    <input type="password" id="verify" name="verify" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <div><img src="{:captcha_src()}" width="200" height="60" class="captcha_change" id="captcha_img" /></div>
+                                    <button type="button" class="btn btn-primary btn-block btn-flat captcha_change">换一张</button>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <button class="layui-btn" lay-filter="sub" lay-submit>立即登录</button>
+
+                            <span style="padding-left:20px;">
+                              <a href="forget.html">忘记密码？</a>
+                            </span>
+                            </div>
+
+                            <div class="layui-form-item fly-form-app">
+                                <span>或者使用社交账号登入</span>
+                                <a href="" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-qq" title="QQ登入"></a>
+                                <a href="" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-weibo" title="微博登入"></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{include file="layout/footer"/}
+{include file="layout/js"/}
+<script type="text/javascript">
+
+    layui.use(['form','jquery','layer'], function () {
+        var form   = layui.form;
+        var $      = layui.jquery;
+        var layer  = layui.layer;
+
+        //刷新验证码
+        $(".captcha_change").click(function(){
+
+            var captcha_img_obj = $("#captcha_img");
+
+            captcha_img_obj.attr("src",captcha_img_obj.attr("src")+"?"+Math.random());
+        });
+
+        //添加表单监听事件,提交注册信息
+        form.on('submit(sub)', function() {
+
+            $.ajax({
+                url:"{:url('doLogin')}",
+                type:'post',
+                dataType:'json',
+                data:$('#reg').serialize(),
+
+                success:function(data){
+                    if (data.code==1) {
+                        layer.msg(data.message);
+                        location.href = "{:url('user/userset')}";
+                    }else {
+                        $(".captcha_change").click();   //刷新验证码
+                        layer.msg(data.message);
+
+                    }
+                }
+            })
+            //防止页面跳转
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>
